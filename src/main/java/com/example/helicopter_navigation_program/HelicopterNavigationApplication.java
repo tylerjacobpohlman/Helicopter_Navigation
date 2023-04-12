@@ -52,7 +52,7 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setTopAnchor(userFeedbackLabel, 500.0);
         givenPane.getChildren().add(userFeedbackLabel);
 
-        /**
+        /*
          * FILE READING
          */
         try {
