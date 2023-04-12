@@ -415,6 +415,50 @@ public class HelicopterNavigationApplication extends Application {
 
         });
 
+        /*
+         * ADD DESTINATION MENU SCENE
+         */
+        addDestinationMenuButton.setOnAction(actionEvent -> {
+            try {
+                //sets location equal to location of the box
+                String location = addLocationField.getText();
+                //creates a temporary string to store input for xy coordinate
+                String xyCoordinate = addXYCoordinateField.getText();
+                //parses the string
+                String[] xyArray = xyCoordinate.split(",");
+                //sets the first part equal to the x coordinate
+                int xCoordinate = Integer.parseInt(xyArray[0]);
+                //sets the second part equal to the y coordinate
+                int yCoordinate = Integer.parseInt(xyArray[1]);
+                //sets gas equal to the checkbox
+                boolean hasGas = addGasBox.isSelected();
+                //adds a new location to the array using the given parameters
+                givenLocations.getItems().add(new Location(location, xCoordinate, yCoordinate, hasGas));
+                //goes back to the main menu
+                givenPane.getChildren().removeAll(addDestinationMenuLabel, addDestionGoBackButton,
+                        addDestinationMenuButton, addLocationLabel, addLocationField, addXYCoordinateLabel,
+                        addXYCoordinateField, addGasLabel, addGasBox);
+                givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                        currLocLabel, currFuelLabel);
+            } catch (NumberFormatException e) {
+                errorLabel.setText("Error: Invalid input in text boxes!\n" +
+                        "Either boxes are blank or xy coordinate was inputted\n" +
+                        "incorrectly. Make sure coordinates are enter as whole\n" +
+                        "numbers, with no spaces and only separated\n" +
+                        "by a comma");
+            }
+        });
+        //pressing the "GO BACK" button removes all the items for the destination menu scene
+        // and adds back the items for the main menu scene
+        addDestionGoBackButton.setOnAction(actionEvent -> {
+            givenPane.getChildren().removeAll(addDestinationMenuLabel, addDestionGoBackButton,
+                    addDestinationMenuButton, addLocationLabel, addLocationField, addXYCoordinateLabel,
+                    addXYCoordinateField, addGasLabel, addGasBox);
+            givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                    currLocLabel, currFuelLabel);
+
+        });
+
         stage.setScene(givenScene);
         stage.setTitle("Helicopter Navigation System");
         stage.show();
