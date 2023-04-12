@@ -28,8 +28,7 @@ public class HelicopterNavigationApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         //creates an ArrayList of locations
-        ArrayList<Location> possibleDestinations = new ArrayList<>();
-
+        ArrayList<Location> givenLocations = new ArrayList<>();
 
         //creates a new AnchorPane, which positions items using coordinates
         AnchorPane givenPane = new AnchorPane();
@@ -103,8 +102,8 @@ public class HelicopterNavigationApplication extends Application {
         ListView<Location> givenLocationsList = new ListView<>();
         AnchorPane.setLeftAnchor(givenLocationsList, 20.0);
         AnchorPane.setTopAnchor(givenLocationsList, 80.0);
-        for(int i = 0; i < possibleDestinations.size(); i++) {
-            givenLocationsList.getItems().add(possibleDestinations.get(i) );
+        for(int i = 0; i < givenLocations.size(); i++) {
+            givenLocationsList.getItems().add(givenLocations.get(i) );
         }
         //goBackButton and position
         Button goBackButton = new Button("GO BACK");
@@ -143,7 +142,7 @@ public class HelicopterNavigationApplication extends Application {
                 //the error label is set blank
                 errorLabel.setText("");
                 //a new helicopter object is created using the given doubles, and the first location object as the current location
-                givenHeli = new Helicopter(possibleDestinations.get(0), maxFuel, maxFuel, milesPerGallon);
+                givenHeli = new Helicopter(givenLocations.get(0), maxFuel, maxFuel, milesPerGallon);
                 //the label about the attributes of the helicopter are initially set after the helicopter object is created
                 currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName() );
                 currFuelLabel.setText("Current Fuel Capacity: " + givenHeli.getCurrFuel() );
