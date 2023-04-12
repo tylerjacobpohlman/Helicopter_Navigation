@@ -72,6 +72,7 @@ public class HelicopterNavigationApplication extends Application {
                 boolean hasGas;
                 //sets the variables to the respective components of the line
                 location = locationAttributes[0];
+                //the limitation with parsing is that blank spaces between the delimiters will cause errors
                 xCoordinate = Integer.parseInt(locationAttributes[1]);
                 yCoordinate = Integer.parseInt(locationAttributes[2]);
                 hasGas = Boolean.parseBoolean(locationAttributes[3]);
