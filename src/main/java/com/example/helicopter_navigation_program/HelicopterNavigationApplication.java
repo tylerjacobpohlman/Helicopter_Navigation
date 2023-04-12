@@ -141,6 +141,8 @@ public class HelicopterNavigationApplication extends Application {
         ListView<String> menuOptionsList = new ListView<>();
         menuOptionsList.getItems().add("Choose a destination");
         menuOptionsList.getItems().add("Refuel");
+        menuOptionsList.getItems().add("Add a destination");
+        menuOptionsList.getItems().add("Remove a destination");
         AnchorPane.setLeftAnchor(menuOptionsList, 20.0);
         AnchorPane.setTopAnchor(menuOptionsList, 120.0);
         //mainMenuButton and position
@@ -159,8 +161,8 @@ public class HelicopterNavigationApplication extends Application {
         ListView<Location> givenLocationsList = new ListView<>();
         AnchorPane.setLeftAnchor(givenLocationsList, 20.0);
         AnchorPane.setTopAnchor(givenLocationsList, 80.0);
-        for(int i = 0; i < givenLocations.size(); i++) {
-            givenLocationsList.getItems().add(givenLocations.get(i) );
+        for (Location givenLocation : givenLocations) {
+            givenLocationsList.getItems().add(givenLocation);
         }
         //goBackButton and position
         Button goBackButton = new Button("GO BACK");
@@ -206,31 +208,39 @@ public class HelicopterNavigationApplication extends Application {
          */
         //when the "ENTER" button is pressed on the main menu
         mainMenuButton.setOnAction(actionEvent -> {
+            //resets the error label and userFeedbackLabel
+            errorLabel.setText("");
+            userFeedbackLabel.setText("");
+            //stores which menu choice was selected
+            String choice = menuOptionsList.getSelectionModel().getSelectedItem();
             try {
-                //resets the error label and userFeedbackLabel
-                errorLabel.setText("");
-                userFeedbackLabel.setText("");
-                //stores which menu choice was selected
-                String choice = menuOptionsList.getSelectionModel().getSelectedItem();
-                //this is here to create a nullPointerException, causing the catch block to be executed
-                //null means a choice isn't selected
-                choice.length();
-                //if a destination option was selected
-                if (choice == "Choose a destination") {
-                    //the main menu scene is removed and the next scene is set
-                    givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton, currLocLabel, currFuelLabel);
-                    givenPane.getChildren().addAll(destinationMenuLabel, givenLocationsList, destinationMenuButton, goBackButton);
-                } else if (choice == "Refuel")
-                    //returns false and refuels if the location has fuel and the current fuel capacity isn't equal to the max fuel capacity
-                    //otherwise, the helicopter is refueled and the body of the if statement isn't executed
-                    if (!(givenHeli.refuel())) {
-                        errorLabel.setText("Error: Unable to refuel");
-                    }
-                    //if the helicopter refueled, update the currFuelCapacityLabel and userFeedbackLabel
-                    else {
-                        currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel() ) );
-                        userFeedbackLabel.setText("Refueling successful!");
-                    }
+                //if the choice is null--i.e., no choice is selected--then a NullPointerException is produced
+                switch (choice) {
+                    case "Choose a destination":
+                        //the main menu scene is removed and the next scene is set
+                        givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton, currLocLabel, currFuelLabel);
+                        givenPane.getChildren().addAll(destinationMenuLabel, givenLocationsList, destinationMenuButton, goBackButton);
+                        break;
+                    case "Refuel":
+                        //returns false and refuels if the location has fuel and the current fuel capacity isn't equal to the max fuel capacity
+                        //otherwise, the helicopter is refueled and the body of the if statement isn't executed
+                        if (!(givenHeli.refuel())) {
+                            errorLabel.setText("Error: Unable to refuel");
+                        }
+                        //if the helicopter refueled, update the currFuelCapacityLabel and userFeedbackLabel
+                        else {
+                            currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel()));
+                            userFeedbackLabel.setText("Refueling successful!");
+                        }
+                        break;
+                    case "Add a destination":
+                        break;
+                    case "Remove a destination":
+                        break;
+                    default:
+                        errorLabel.setText("Error: Please select an option");
+                        break;
+                }
             }
             //induced when a choice isn't selected
             catch(NullPointerException e) {
