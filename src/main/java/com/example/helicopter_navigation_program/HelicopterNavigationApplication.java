@@ -10,10 +10,7 @@ package com.example.helicopter_navigation_program;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -194,6 +191,46 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setBottomAnchor(removeDestinationMenuButton, 80.0);
 
         /*
+         * ITEMS USED FOR ADD DESTINATION MENU
+         */
+        Label addDestinationMenuLabel = new Label("ADD DESTINATIONS MENU:" +
+                "\nPlease enter the location name, x-y coordinates, and whether the location has gas.");
+        AnchorPane.setLeftAnchor(addDestinationMenuLabel, 20.0);
+        AnchorPane.setTopAnchor(addDestinationMenuLabel, 40.0);
+        //addDestionGoBackButton and position
+        Button addDestionGoBackButton = new Button("GO BACK");
+        AnchorPane.setLeftAnchor(addDestionGoBackButton, 20.0);
+        AnchorPane.setBottomAnchor(addDestionGoBackButton, 20.0);
+        //addDestinationMenuButton and position
+        Button addDestinationMenuButton = new Button("ENTER");
+        AnchorPane.setLeftAnchor(addDestinationMenuButton, 100.0);
+        AnchorPane.setBottomAnchor(addDestinationMenuButton, 20.0);
+        //addLocationLabel and position
+        Label addLocationLabel = new Label("Enter the name of the location:");
+        AnchorPane.setLeftAnchor(addLocationLabel, 20.0);
+        AnchorPane.setTopAnchor(addLocationLabel, 80.0);
+        //addLocationField and position
+        TextField addLocationField = new TextField();
+        AnchorPane.setLeftAnchor(addLocationField, 20.0);
+        AnchorPane.setTopAnchor(addLocationField, 100.0);
+        //addXYCoordinateLabel and position
+        Label addXYCoordinateLabel  = new Label("Enter the x,y coordinates (x,y) as two integer " +
+                "separated by a comma:");
+        AnchorPane.setLeftAnchor(addXYCoordinateLabel, 20.0);
+        AnchorPane.setTopAnchor(addXYCoordinateLabel, 140.0);
+        //addXYCoordinateField and position
+        TextField addXYCoordinateField = new TextField();
+        AnchorPane.setLeftAnchor(addXYCoordinateField, 20.0);
+        AnchorPane.setTopAnchor(addXYCoordinateField, 160.0);
+        Label addGasLabel  = new Label("Check the box if the destination has gas. Leave the box unchecked if not.");
+        AnchorPane.setLeftAnchor(addGasLabel, 20.0);
+        AnchorPane.setTopAnchor(addGasLabel, 200.0);
+        //addXYCoordinateField and position
+        CheckBox addGasBox = new CheckBox();
+        AnchorPane.setLeftAnchor(addGasBox, 20.0);
+        AnchorPane.setTopAnchor(addGasBox, 220.0);
+
+        /*
          * INTRODUCTION SCENE
          */
         //all the items for the introduction scene are added
@@ -216,7 +253,7 @@ public class HelicopterNavigationApplication extends Application {
                 currFuelLabel.setText("Current Fuel Capacity: " + givenHeli.getCurrFuel() );
                 //if successful, the introduction scene is removed and the main menu scene is set
                 givenPane.getChildren().removeAll(introductionLabel, maxFuelCapacityLabel, maxFuelCapacityField,
-                        milesPerGallonLabel, milesPerGallonField);
+                        milesPerGallonLabel, milesPerGallonField, setupButton);
                 givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton, currLocLabel,
                         currFuelLabel);
 
@@ -262,6 +299,11 @@ public class HelicopterNavigationApplication extends Application {
                         }
                         break;
                     case "Add a destination":
+                        givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                                currLocLabel, currFuelLabel);
+                        givenPane.getChildren().addAll(addDestinationMenuLabel, addDestionGoBackButton,
+                                addDestinationMenuButton, addLocationLabel, addLocationField, addXYCoordinateLabel,
+                                addXYCoordinateField, addGasLabel, addGasBox);
                         break;
                     case "Remove a destination":
                         //the main menu scene is removed and the next scene is set
