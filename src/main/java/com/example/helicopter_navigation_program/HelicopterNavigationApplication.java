@@ -15,7 +15,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import java.io.IOException;
+
+import java.io.*;
 import java.util.ArrayList;
 
 
@@ -35,6 +36,61 @@ public class HelicopterNavigationApplication extends Application {
 
         //creates a new scene using the pane
         Scene givenScene = new Scene(givenPane, 800, 600);
+
+        /*
+         * ITEMS USED THROUGHOUT ALL SCENES
+         * moved here so any file exceptions can be displayed on the GUI
+         */
+        //errorLabel, position and addition to pane
+        Label errorLabel = new Label("");
+        AnchorPane.setLeftAnchor(errorLabel, 500.0);
+        AnchorPane.setTopAnchor(errorLabel, 500.0);
+        givenPane.getChildren().add(errorLabel);
+        //userFeedbackLabel, position, and addition to the pane
+        Label userFeedbackLabel = new Label("");
+        AnchorPane.setLeftAnchor(userFeedbackLabel, 500.0);
+        AnchorPane.setTopAnchor(userFeedbackLabel, 500.0);
+        givenPane.getChildren().add(userFeedbackLabel);
+
+        try {
+            // creates the three objects in order to open the file, read from the file, and store it results
+            //in the BufferedReader
+            File givenFile = new File("locations.csv");
+            FileReader fr = new FileReader(givenFile);
+            BufferedReader br = new BufferedReader(fr);
+            //used to store the given line of the file
+            //the first line is automatically stored in the file
+            String line = br.readLine();
+            //chose instead of do-while because file may be empty, so trying to parse null causes an error
+            while (line != null) {
+                //creates an array, storing each respective attribute as defined in the file
+                String[] locationAttributes = line.split("%");
+                //used to store the separate components of the array
+                String location;
+                int xCoordinate;
+                int yCoordinate;
+                boolean hasGas;
+                //sets the variables to the respective components of the line
+                location = locationAttributes[0];
+                xCoordinate = Integer.parseInt(locationAttributes[1]);
+                yCoordinate = Integer.parseInt(locationAttributes[2]);
+                hasGas = Boolean.parseBoolean(locationAttributes[3]);
+                //adds the location the arraylist
+                givenLocations.add(new Location(location, xCoordinate, yCoordinate, hasGas));
+                //increments to the next line
+                line = br.readLine();
+            }
+            //closes the buffered reader and file reader
+            br.close();
+            fr.close();
+        //if no file with the given name "locations.csv"
+        } catch (FileNotFoundException e) {
+            errorLabel.setText("Error: Cannot find 'locations.csv'!\nMake sure the file is named correctly or present in the given directory.");
+        }
+        // if there's a problem when trying to read the file
+        catch (IOException f) {
+            errorLabel.setText("Error: Cannot read file!\nCheck the integrity of of 'locations.csv' or make another 'locations.csv' file.");
+        }
 
         /*
          * ITEMS USED FOR INTRODUCTION SCENE
@@ -113,20 +169,6 @@ public class HelicopterNavigationApplication extends Application {
         Button destinationMenuButton = new Button("ENTER");
         AnchorPane.setLeftAnchor(destinationMenuButton, 100.0);
         AnchorPane.setBottomAnchor(destinationMenuButton, 80.0);
-
-        /*
-         * ITEMS USED THROUGHOUT ALL SCENES
-         */
-        //errorLabel, position and addition to pane
-        Label errorLabel = new Label("");
-        AnchorPane.setLeftAnchor(errorLabel, 500.0);
-        AnchorPane.setTopAnchor(errorLabel, 500.0);
-        givenPane.getChildren().add(errorLabel);
-        //userFeedbackLabel, position, and addition to the pane
-        Label userFeedbackLabel = new Label("");
-        AnchorPane.setLeftAnchor(userFeedbackLabel, 500.0);
-        AnchorPane.setTopAnchor(userFeedbackLabel, 500.0);
-        givenPane.getChildren().add(userFeedbackLabel);
 
         /*
          * INTRODUCTION SCENE
