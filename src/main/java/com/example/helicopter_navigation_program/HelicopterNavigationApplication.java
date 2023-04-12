@@ -8,6 +8,7 @@
 package com.example.helicopter_navigation_program;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,8 +29,6 @@ public class HelicopterNavigationApplication extends Application {
     //I'm not entirely sure what's going on with the backend of the method, but loops seem pointless here
     @Override
     public void start(Stage stage) throws IOException {
-        //creates an ArrayList of locations
-        ArrayList<Location> givenLocations = new ArrayList<>();
 
         //creates a new AnchorPane, which positions items using coordinates
         AnchorPane givenPane = new AnchorPane();
@@ -51,6 +50,10 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setLeftAnchor(userFeedbackLabel, 500.0);
         AnchorPane.setTopAnchor(userFeedbackLabel, 500.0);
         givenPane.getChildren().add(userFeedbackLabel);
+        //creates and sets the position for the list view of locations
+        ListView<Location> givenLocations = new ListView<>();
+        AnchorPane.setLeftAnchor(givenLocations, 20.0);
+        AnchorPane.setTopAnchor(givenLocations, 80.0);
 
         /*
          * FILE READING
@@ -80,7 +83,7 @@ public class HelicopterNavigationApplication extends Application {
                 yCoordinate = Integer.parseInt(locationAttributes[2]);
                 hasGas = Boolean.parseBoolean(locationAttributes[3]);
                 //adds the location the arraylist
-                givenLocations.add(new Location(location, xCoordinate, yCoordinate, hasGas));
+                givenLocations.getItems().add(new Location(location, xCoordinate, yCoordinate, hasGas));
                 //increments to the next line
                 line = br.readLine();
             }
@@ -165,13 +168,6 @@ public class HelicopterNavigationApplication extends Application {
                 "Please select from the following destinations...");
         AnchorPane.setLeftAnchor(destinationMenuLabel, 20.0);
         AnchorPane.setTopAnchor(destinationMenuLabel, 40.0);
-        //givenLocationsList, attributes, and position
-        ListView<Location> givenLocationsList = new ListView<>();
-        AnchorPane.setLeftAnchor(givenLocationsList, 20.0);
-        AnchorPane.setTopAnchor(givenLocationsList, 80.0);
-        for (Location givenLocation : givenLocations) {
-            givenLocationsList.getItems().add(givenLocation);
-        }
         //goBackButton and position
         Button goBackButton = new Button("GO BACK");
         AnchorPane.setLeftAnchor(goBackButton, 20.0);
@@ -184,17 +180,10 @@ public class HelicopterNavigationApplication extends Application {
         /*
          * ITEMS USED FOR REMOVE DESTINATION MENU
          */
-        Label removeDestinationMenuLabel = new Label("DESTINATIONS MENU:" +
-                "\nPlease select from the following destinations...");
+        Label removeDestinationMenuLabel = new Label("REMOVE DESTINATIONS MENU:" +
+                "\nPlease select which of the following destinations to remove...");
         AnchorPane.setLeftAnchor(removeDestinationMenuLabel, 20.0);
         AnchorPane.setTopAnchor(removeDestinationMenuLabel, 40.0);
-        //removableLocationsList, attributes, and position
-        ListView<Location> removableLocationsList = new ListView<>();
-        AnchorPane.setLeftAnchor(removableLocationsList, 20.0);
-        AnchorPane.setTopAnchor(removableLocationsList, 80.0);
-        for (Location givenLocation : givenLocations) {
-            removableLocationsList.getItems().add(givenLocation);
-        }
         //goBackButton and position
         Button removeDestionGoBackButton = new Button("GO BACK");
         AnchorPane.setLeftAnchor(removeDestionGoBackButton, 20.0);
@@ -220,7 +209,7 @@ public class HelicopterNavigationApplication extends Application {
                 errorLabel.setText("");
                 //a new helicopter object is created using the given doubles, and the first location object
                 // as the current location
-                givenHeli = new Helicopter(givenLocations.get(0), maxFuel, maxFuel, milesPerGallon);
+                givenHeli = new Helicopter(givenLocations.getItems().get(0), maxFuel, maxFuel, milesPerGallon);
                 //the label about the attributes of the helicopter are initially set after the helicopter
                 // object is created
                 currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName() );
@@ -256,7 +245,7 @@ public class HelicopterNavigationApplication extends Application {
                         //the main menu scene is removed and the next scene is set
                         givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                                 currLocLabel, currFuelLabel);
-                        givenPane.getChildren().addAll(destinationMenuLabel, givenLocationsList,
+                        givenPane.getChildren().addAll(destinationMenuLabel, givenLocations,
                                 destinationMenuButton, goBackButton);
                         break;
                     case "Refuel":
@@ -278,7 +267,8 @@ public class HelicopterNavigationApplication extends Application {
                         //the main menu scene is removed and the next scene is set
                         givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                                 currLocLabel, currFuelLabel);
-                        givenPane.getChildren().addAll(removeDestinationMenuButton,removableLocationsList,
+                        int x = 5;
+                        givenPane.getChildren().addAll(removeDestinationMenuLabel,givenLocations,
                                 removeDestinationMenuButton, removeDestionGoBackButton);
                         break;
                     default:
@@ -301,7 +291,7 @@ public class HelicopterNavigationApplication extends Application {
                 errorLabel.setText("");
                 userFeedbackLabel.setText("");
                 //stores which location choice was selected
-                Location choice = givenLocationsList.getSelectionModel().getSelectedItem();
+                Location choice = givenLocations.getSelectionModel().getSelectedItem();
                 //this is here to create a nullPointerException, causing the catch block to be executed
                 //null means a choice isn't selected
                 choice.getLocationName();
@@ -322,7 +312,7 @@ public class HelicopterNavigationApplication extends Application {
                     currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName());
                     currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel() ) );
                     //the scene is set to the main menu
-                    givenPane.getChildren().removeAll(destinationMenuLabel, givenLocationsList,
+                    givenPane.getChildren().removeAll(destinationMenuLabel, givenLocations,
                             destinationMenuButton, goBackButton);
                     givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                             currLocLabel, currFuelLabel);
@@ -338,8 +328,46 @@ public class HelicopterNavigationApplication extends Application {
         //pressing the "GO BACK" button removes all the items for the destination menu scene
         // and adds back the items for the main menu scene
         goBackButton.setOnAction(actionEvent -> {
-            givenPane.getChildren().removeAll(destinationMenuLabel, givenLocationsList,
+            givenPane.getChildren().removeAll(destinationMenuLabel, givenLocations,
                     destinationMenuButton, goBackButton);
+            givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                    currLocLabel, currFuelLabel);
+
+        });
+
+        /*
+         * REMOVE DESTINATION MENU SCENE
+         */
+        removeDestinationMenuButton.setOnAction(actionEvent -> {
+            //resets the error label and userFeedbackLabel
+            errorLabel.setText("");
+            userFeedbackLabel.setText("");
+            //stores which location choice was selected
+            Location choice = givenLocations.getSelectionModel().getSelectedItem();
+            //if a choice isn't selected
+            if(choice == null) {
+                errorLabel.setText("Error: No option selected");
+            }
+            else if(choice == givenHeli.getCurrLocation() ){
+                errorLabel.setText("Error: Cannot remove current location");
+            }
+            else {
+                //removes the selected location from the arraylist
+                givenLocations.getItems().remove(choice);
+                //the scene is set to the main menu
+                givenPane.getChildren().removeAll(removeDestinationMenuLabel,givenLocations,
+                        removeDestinationMenuButton, removeDestionGoBackButton);
+                givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                        currLocLabel, currFuelLabel);
+                //user feedback label updated
+                userFeedbackLabel.setText("Successfully removed " + choice.getLocationName() + "!");
+            }
+        });
+        //pressing the "GO BACK" button removes all the items for the destination menu scene
+        // and adds back the items for the main menu scene
+        removeDestionGoBackButton.setOnAction(actionEvent -> {
+            givenPane.getChildren().removeAll(removeDestinationMenuLabel,givenLocations,
+                    removeDestinationMenuButton, removeDestionGoBackButton);
             givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                     currLocLabel, currFuelLabel);
 
