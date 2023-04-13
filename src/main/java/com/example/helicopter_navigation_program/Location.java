@@ -53,4 +53,11 @@ public class Location {
                 + gasStatement;
 
     }
+
+    //used for outputting to file
+    public String outputToLine() {
+        return location + '%' + xCoordinate + '%' + yCoordinate + '%' + hasGas + '\n';
+    }
+
+
 }
