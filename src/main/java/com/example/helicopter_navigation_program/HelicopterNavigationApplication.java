@@ -8,6 +8,7 @@
 package com.example.helicopter_navigation_program;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -16,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 public class HelicopterNavigationApplication extends Application {
@@ -87,14 +89,14 @@ public class HelicopterNavigationApplication extends Application {
             //closes the buffered reader and file reader
             br.close();
             fr.close();
-        //if no file with the given name "locations.csv"
+            //if no file with the given name "locations.csv"
         } catch (FileNotFoundException e) {
             errorLabel.setText("Error: Cannot find 'locations.csv'!\nMake sure the file is named correctly or " +
                     "present in the given directory.");
         }
         // if there's a problem when trying to read the file
         catch (IOException f) {
-            errorLabel.setText("Error: Cannot read file!\nCheck the integrity of of 'locations.csv' or make another " +
+            errorLabel.setText("Error: Cannot read file!\nCheck the integrity of 'locations.csv' or make another " +
                     "'locations.csv' file.");
         }
 
@@ -116,7 +118,7 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setLeftAnchor(maxFuelCapacityField, 20.0);
         AnchorPane.setTopAnchor(maxFuelCapacityField, 80.0);
         //milesPerGallonLabel and position
-        Label milesPerGallonLabel  = new Label("Enter the miles per gallon (MPG) of the helicopter:");
+        Label milesPerGallonLabel = new Label("Enter the miles per gallon (MPG) of the helicopter:");
         AnchorPane.setLeftAnchor(milesPerGallonLabel, 20.0);
         AnchorPane.setTopAnchor(milesPerGallonLabel, 120.0);
         //milesPerGallonField and position
@@ -214,7 +216,7 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setLeftAnchor(addLocationField, 20.0);
         AnchorPane.setTopAnchor(addLocationField, 100.0);
         //addXYCoordinateLabel and position
-        Label addXYCoordinateLabel  = new Label("Enter the x,y coordinates (x,y) as two integer " +
+        Label addXYCoordinateLabel = new Label("Enter the x,y coordinates (x,y) as two integer " +
                 "separated by a comma:");
         AnchorPane.setLeftAnchor(addXYCoordinateLabel, 20.0);
         AnchorPane.setTopAnchor(addXYCoordinateLabel, 140.0);
@@ -222,7 +224,7 @@ public class HelicopterNavigationApplication extends Application {
         TextField addXYCoordinateField = new TextField();
         AnchorPane.setLeftAnchor(addXYCoordinateField, 20.0);
         AnchorPane.setTopAnchor(addXYCoordinateField, 160.0);
-        Label addGasLabel  = new Label("Check the box if the destination has gas. Leave the box unchecked if not.");
+        Label addGasLabel = new Label("Check the box if the destination has gas. Leave the box unchecked if not.");
         AnchorPane.setLeftAnchor(addGasLabel, 20.0);
         AnchorPane.setTopAnchor(addGasLabel, 200.0);
         //addXYCoordinateField and position
@@ -241,7 +243,7 @@ public class HelicopterNavigationApplication extends Application {
             //tries grabbing the information from the two text fields as doubles
             try {
                 double maxFuel = Double.parseDouble(maxFuelCapacityField.getText());
-                double milesPerGallon = Double.parseDouble(milesPerGallonField.getText() );
+                double milesPerGallon = Double.parseDouble(milesPerGallonField.getText());
                 //the error label is set blank
                 errorLabel.setText("");
                 //a new helicopter object is created using the given doubles, and the first location object
@@ -249,8 +251,8 @@ public class HelicopterNavigationApplication extends Application {
                 givenHeli = new Helicopter(givenLocations.getItems().get(0), maxFuel, maxFuel, milesPerGallon);
                 //the label about the attributes of the helicopter are initially set after the helicopter
                 // object is created
-                currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName() );
-                currFuelLabel.setText("Current Fuel Capacity: " + givenHeli.getCurrFuel() );
+                currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName());
+                currFuelLabel.setText("Current Fuel Capacity: " + givenHeli.getCurrFuel());
                 //if successful, the introduction scene is removed and the main menu scene is set
                 givenPane.getChildren().removeAll(introductionLabel, maxFuelCapacityLabel, maxFuelCapacityField,
                         milesPerGallonLabel, milesPerGallonField, setupButton);
@@ -258,9 +260,12 @@ public class HelicopterNavigationApplication extends Application {
                         currFuelLabel);
 
             }
+            //induced when the file is empty
+            catch (IndexOutOfBoundsException e) {
+                errorLabel.setText("Error: Input file was empty");
+            }
             //errors can only result if the text fields are empty, or any other character besides numbers are entered
-            catch(Exception e)
-            {
+            catch (NumberFormatException e) {
                 errorLabel.setText("Error: Invalid input in text boxes");
             }
         });
@@ -310,7 +315,7 @@ public class HelicopterNavigationApplication extends Application {
                         givenPane.getChildren().removeAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                                 currLocLabel, currFuelLabel);
                         int x = 5;
-                        givenPane.getChildren().addAll(removeDestinationMenuLabel,givenLocations,
+                        givenPane.getChildren().addAll(removeDestinationMenuLabel, givenLocations,
                                 removeDestinationMenuButton, removeDestionGoBackButton);
                         break;
                     default:
@@ -319,10 +324,10 @@ public class HelicopterNavigationApplication extends Application {
                 }
             }
             //induced when a choice isn't selected
-            catch(NullPointerException e) {
+            catch (NullPointerException e) {
                 errorLabel.setText("Error: No option selected");
             }
-        } );
+        });
 
         /*
          * DESTINATION MENU SCENE
@@ -338,13 +343,13 @@ public class HelicopterNavigationApplication extends Application {
                 //null means a choice isn't selected
                 choice.getLocationName();
                 //determines if the selected location is the current location of the helicopter
-                if(choice == givenHeli.getCurrLocation() ) {
+                if (choice == givenHeli.getCurrLocation()) {
                     errorLabel.setText("Error: Already in selected location");
 
                 }
                 //check if userHeli isn't able to fly to the given choice location
                 //otherwise, the flyTo() method is executed and the body of this if statement is skipped
-                else if( !(givenHeli.flyTo(choice)) ) {
+                else if (!(givenHeli.flyTo(choice))) {
                     errorLabel.setText("Error: Unable to fly to " + choice.getLocationName() + ".\n" +
                             "The helicopter doesn't have enough gas!");
                 }
@@ -352,7 +357,7 @@ public class HelicopterNavigationApplication extends Application {
                 else {
                     //the location and fuel labels for in the main menu are updated
                     currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName());
-                    currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel() ) );
+                    currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel()));
                     //the scene is set to the main menu
                     givenPane.getChildren().removeAll(destinationMenuLabel, givenLocations,
                             destinationMenuButton, goBackButton);
@@ -363,7 +368,7 @@ public class HelicopterNavigationApplication extends Application {
                 }
             }
             //triggered when no selection is made
-            catch(NullPointerException e) {
+            catch (NullPointerException e) {
                 errorLabel.setText("Error: No option selected");
             }
         });
@@ -387,17 +392,15 @@ public class HelicopterNavigationApplication extends Application {
             //stores which location choice was selected
             Location choice = givenLocations.getSelectionModel().getSelectedItem();
             //if a choice isn't selected
-            if(choice == null) {
+            if (choice == null) {
                 errorLabel.setText("Error: No option selected");
-            }
-            else if(choice == givenHeli.getCurrLocation() ){
+            } else if (choice == givenHeli.getCurrLocation()) {
                 errorLabel.setText("Error: Cannot remove current location");
-            }
-            else {
+            } else {
                 //removes the selected location from the arraylist
                 givenLocations.getItems().remove(choice);
                 //the scene is set to the main menu
-                givenPane.getChildren().removeAll(removeDestinationMenuLabel,givenLocations,
+                givenPane.getChildren().removeAll(removeDestinationMenuLabel, givenLocations,
                         removeDestinationMenuButton, removeDestionGoBackButton);
                 givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                         currLocLabel, currFuelLabel);
@@ -408,7 +411,7 @@ public class HelicopterNavigationApplication extends Application {
         //pressing the "GO BACK" button removes all the items for the destination menu scene
         // and adds back the items for the main menu scene
         removeDestionGoBackButton.setOnAction(actionEvent -> {
-            givenPane.getChildren().removeAll(removeDestinationMenuLabel,givenLocations,
+            givenPane.getChildren().removeAll(removeDestinationMenuLabel, givenLocations,
                     removeDestinationMenuButton, removeDestionGoBackButton);
             givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                     currLocLabel, currFuelLabel);
@@ -457,6 +460,23 @@ public class HelicopterNavigationApplication extends Application {
             givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                     currLocLabel, currFuelLabel);
 
+        });
+
+        /*
+         * FILE WRITING
+         */
+        //
+        stage.setOnCloseRequest(event -> {
+            try {
+                FileWriter fw = new FileWriter("locations.csv");
+                for (int i = 0; i < givenLocations.getItems().size(); i++) {
+                    fw.write(givenLocations.getItems().get(i).outputToLine());
+                }
+                fw.close();
+            } catch (IOException e) {
+                //the program is already closed out, so the only place to throw an error is in the terminal
+                System.out.println("Error: Unable to write file!");
+            }
         });
 
         stage.setScene(givenScene);
