@@ -333,43 +333,41 @@ public class HelicopterNavigationApplication extends Application {
          * DESTINATION MENU SCENE
          */
         destinationMenuButton.setOnAction(actionEvent -> {
-            try {
-                //resets the error label and user feedback label
-                errorLabel.setText("");
-                userFeedbackLabel.setText("");
-                //stores which location choice was selected
-                Location choice = givenLocations.getSelectionModel().getSelectedItem();
-                //this is here to create a nullPointerException, causing the catch block to be executed
-                //null means a choice isn't selected
-                choice.getLocationName();
-                //determines if the selected location is the current location of the helicopter
-                if (choice == givenHeli.getCurrLocation()) {
-                    errorLabel.setText("Error: Already in selected location");
+            //resets the error label and user feedback label
+            errorLabel.setText("");
+            userFeedbackLabel.setText("");
+            //stores which location choice was selected
+            Location choice = givenLocations.getSelectionModel().getSelectedItem();
 
-                }
-                //check if userHeli isn't able to fly to the given choice location
-                //otherwise, the flyTo() method is executed and the body of this if statement is skipped
-                else if (!(givenHeli.flyTo(choice))) {
-                    errorLabel.setText("Error: Unable to fly to " + choice.getLocationName() + ".\n" +
-                            "The helicopter doesn't have enough gas!");
-                }
-                //if the helicopter is able to fly to the choice destination and has done so
-                else {
-                    //the location and fuel labels for in the main menu are updated
-                    currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName());
-                    currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel()));
-                    //the scene is set to the main menu
-                    givenPane.getChildren().removeAll(destinationMenuLabel, givenLocations,
-                            destinationMenuButton, goBackButton);
-                    givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
-                            currLocLabel, currFuelLabel);
-                    //user feedback label updated
-                    userFeedbackLabel.setText("Welcome to " + givenHeli.getCurrLocation().getLocationName() + '!');
-                }
-            }
-            //triggered when no selection is made
-            catch (NullPointerException e) {
+            //I tried using a switch statement with my choice as the switch, but the developers of Java don't like
+            //me to have nice things
+
+            //if no location choice is selected
+            if(choice == null) {
                 errorLabel.setText("Error: No option selected");
+            }
+            //determines if the selected location is the current location of the helicopter
+            else if (choice == givenHeli.getCurrLocation()) {
+                errorLabel.setText("Error: Already in selected location");
+            }
+            //check if userHeli isn't able to fly to the given choice location
+            //otherwise, the flyTo() method is executed and the body of this if statement is skipped
+            else if (!(givenHeli.flyTo(choice))) {
+                errorLabel.setText("Error: Unable to fly to " + choice.getLocationName() + ".\n" +
+                        "The helicopter doesn't have enough gas!");
+            }
+            //if the helicopter is able to fly to the choice destination and has done so
+            else {
+                //the location and fuel labels for in the main menu are updated
+                currLocLabel.setText("Current Location: " + givenHeli.getCurrLocation().getLocationName());
+                currFuelLabel.setText("Current Fuel Capacity: " + Math.round(givenHeli.getCurrFuel()));
+                //the scene is set to the main menu
+                givenPane.getChildren().removeAll(destinationMenuLabel, givenLocations,
+                        destinationMenuButton, goBackButton);
+                givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
+                        currLocLabel, currFuelLabel);
+                //user feedback label updated
+                userFeedbackLabel.setText("Welcome to " + givenHeli.getCurrLocation().getLocationName() + '!');
             }
         });
         //pressing the "GO BACK" button removes all the items for the destination menu scene
