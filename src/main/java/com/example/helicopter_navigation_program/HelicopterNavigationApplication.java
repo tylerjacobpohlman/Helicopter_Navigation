@@ -456,6 +456,10 @@ public class HelicopterNavigationApplication extends Application {
                         addXYCoordinateField, addGasLabel, addGasBox);
                 givenPane.getChildren().addAll(mainMenuLabel, menuOptionsList, mainMenuButton,
                         currLocLabel, currFuelLabel);
+                //user feedback label updates
+                int lastIndex = givenLocations.getItems().size() - 1;
+                userFeedbackLabel.setText("Successfully added "
+                        + givenLocations.getItems().get(lastIndex).getLocationName() + '!');
             } catch (NumberFormatException e) {
                 errorLabel.setText("Error: Invalid input in text boxes!\n" +
                         "Either boxes are blank or xy coordinate was inputted\n" +
