@@ -1,0 +1,33 @@
+.root{
+    -fx-background-color: white;
+    -fx-font-size: 16px;
+}
+
+
+.goback{
+    -fx-border-color: red;
+    -fx-border-size: 8px;
+}
+.goback:hover{
+    -fx-background-color: red;
+}
+
+.enter{
+    -fx-border-color: green;
+    -fx-border-size: 8px;
+}
+.enter:hover{
+    -fx-background-color: green;
+}
+
+.er{
+    -fx-text-fill: red;
+    -fx-font-size: 18;
+}
+
+
+.uf{
+    -fx-text-fill: green;
+    -fx-font-size: 18;
+}
+
