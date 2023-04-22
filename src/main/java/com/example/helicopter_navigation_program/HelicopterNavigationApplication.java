@@ -35,6 +35,9 @@ public class HelicopterNavigationApplication extends Application {
         //creates a new scene using the pane
         Scene givenScene = new Scene(givenPane, 800, 600);
 
+        //adds the style sheet to the program
+        givenScene.getStylesheets().add("style.css");
+
         /*
          * ITEMS USED THROUGHOUT ALL SCENES
          * moved here so any file exceptions can be displayed on the GUI
@@ -43,16 +46,18 @@ public class HelicopterNavigationApplication extends Application {
         Label errorLabel = new Label("");
         AnchorPane.setLeftAnchor(errorLabel, 500.0);
         AnchorPane.setTopAnchor(errorLabel, 500.0);
+        errorLabel.getStyleClass().add("er");
         givenPane.getChildren().add(errorLabel);
         //userFeedbackLabel, position, and addition to the pane
         Label userFeedbackLabel = new Label("");
         AnchorPane.setLeftAnchor(userFeedbackLabel, 500.0);
         AnchorPane.setTopAnchor(userFeedbackLabel, 500.0);
+        userFeedbackLabel.getStyleClass().add("uf");
         givenPane.getChildren().add(userFeedbackLabel);
         //creates and sets the position for the list view of locations
         ListView<Location> givenLocations = new ListView<>();
         AnchorPane.setLeftAnchor(givenLocations, 20.0);
-        AnchorPane.setTopAnchor(givenLocations, 80.0);
+        AnchorPane.setTopAnchor(givenLocations, 100.0);
 
         /*
          * FILE READING
@@ -105,30 +110,33 @@ public class HelicopterNavigationApplication extends Application {
          */
         //introductionLabel and position
         Label introductionLabel = new
-                Label("Welcome to the helicopter navigation system! Please enter the MPG and maximum fuel " +
-                "capacity into their respective fields.\nClick DONE when done.");
+                Label("""
+                Welcome to the helicopter navigation system! Please enter the MPG and maximum fuel capacity into their
+                respective fields.
+                Click DONE when done.""");
         AnchorPane.setLeftAnchor(introductionLabel, 40.0);
         AnchorPane.setTopAnchor(introductionLabel, 20.0);
         //maxFuelCapacityLabel and position
         Label maxFuelCapacityLabel = new Label("Enter the maximum fuel capacity of the helicopter below:");
         AnchorPane.setLeftAnchor(maxFuelCapacityLabel, 20.0);
-        AnchorPane.setTopAnchor(maxFuelCapacityLabel, 60.0);
+        AnchorPane.setTopAnchor(maxFuelCapacityLabel, 120.0);
         //maxFuelCapacityField and position
         TextField maxFuelCapacityField = new TextField();
         AnchorPane.setLeftAnchor(maxFuelCapacityField, 20.0);
-        AnchorPane.setTopAnchor(maxFuelCapacityField, 80.0);
+        AnchorPane.setTopAnchor(maxFuelCapacityField, 150.0);
         //milesPerGallonLabel and position
         Label milesPerGallonLabel = new Label("Enter the miles per gallon (MPG) of the helicopter:");
         AnchorPane.setLeftAnchor(milesPerGallonLabel, 20.0);
-        AnchorPane.setTopAnchor(milesPerGallonLabel, 120.0);
+        AnchorPane.setTopAnchor(milesPerGallonLabel, 190.0);
         //milesPerGallonField and position
         TextField milesPerGallonField = new TextField();
         AnchorPane.setLeftAnchor(milesPerGallonField, 20.0);
-        AnchorPane.setTopAnchor(milesPerGallonField, 140.0);
+        AnchorPane.setTopAnchor(milesPerGallonField, 220.0);
         //setupButton and position
         Button setupButton = new Button("DONE");
+        setupButton.getStyleClass().add("enter");
         AnchorPane.setLeftAnchor(setupButton, 20.0);
-        AnchorPane.setTopAnchor(setupButton, 180.0);
+        AnchorPane.setTopAnchor(setupButton, 280.0);
 
         /*
          * ITEMS USED FOR MAIN MENU SCENE
@@ -145,7 +153,7 @@ public class HelicopterNavigationApplication extends Application {
         Label mainMenuLabel = new Label("MAIN MENU:\nPlease select from the following options and click " +
                 "ENTER when done...");
         AnchorPane.setLeftAnchor(mainMenuLabel, 20.0);
-        AnchorPane.setTopAnchor(mainMenuLabel, 80.0);
+        AnchorPane.setTopAnchor(mainMenuLabel, 60.0);
         //menuOptionsList and position
         ListView<String> menuOptionsList = new ListView<>();
         menuOptionsList.getItems().add("Choose a destination");
@@ -156,8 +164,9 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setTopAnchor(menuOptionsList, 120.0);
         //mainMenuButton and position
         Button mainMenuButton = new Button("ENTER");
+        mainMenuButton.getStyleClass().add("enter");
         AnchorPane.setLeftAnchor(mainMenuButton, 20.0);
-        AnchorPane.setBottomAnchor(mainMenuButton, 40.0);
+        AnchorPane.setBottomAnchor(mainMenuButton, 20.0);
 
         /*
          * ITEMS USED FOR DESTINATIONS MENU
@@ -169,12 +178,14 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setTopAnchor(destinationMenuLabel, 40.0);
         //goBackButton and position
         Button goBackButton = new Button("GO BACK");
+        goBackButton.getStyleClass().add("goback");
         AnchorPane.setLeftAnchor(goBackButton, 20.0);
-        AnchorPane.setBottomAnchor(goBackButton, 80.0);
+        AnchorPane.setBottomAnchor(goBackButton, 40.0);
         //destinationMenuButton and position
         Button destinationMenuButton = new Button("ENTER");
-        AnchorPane.setLeftAnchor(destinationMenuButton, 100.0);
-        AnchorPane.setBottomAnchor(destinationMenuButton, 80.0);
+        destinationMenuButton.getStyleClass().add("enter");
+        AnchorPane.setLeftAnchor(destinationMenuButton, 140.0);
+        AnchorPane.setBottomAnchor(destinationMenuButton, 40.0);
 
         /*
          * ITEMS USED FOR REMOVE DESTINATION MENU
@@ -185,12 +196,14 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setTopAnchor(removeDestinationMenuLabel, 40.0);
         //goBackButton and position
         Button removeDestionGoBackButton = new Button("GO BACK");
+        removeDestionGoBackButton.getStyleClass().add("goback");
         AnchorPane.setLeftAnchor(removeDestionGoBackButton, 20.0);
-        AnchorPane.setBottomAnchor(removeDestionGoBackButton, 80.0);
+        AnchorPane.setBottomAnchor(removeDestionGoBackButton, 40.0);
         //destinationMenuButton and position
         Button removeDestinationMenuButton = new Button("ENTER");
-        AnchorPane.setLeftAnchor(removeDestinationMenuButton, 100.0);
-        AnchorPane.setBottomAnchor(removeDestinationMenuButton, 80.0);
+        removeDestinationMenuButton.getStyleClass().add("enter");
+        AnchorPane.setLeftAnchor(removeDestinationMenuButton, 160.0);
+        AnchorPane.setBottomAnchor(removeDestinationMenuButton, 40.0);
 
         /*
          * ITEMS USED FOR ADD DESTINATION MENU
@@ -201,36 +214,38 @@ public class HelicopterNavigationApplication extends Application {
         AnchorPane.setTopAnchor(addDestinationMenuLabel, 40.0);
         //addDestionGoBackButton and position
         Button addDestionGoBackButton = new Button("GO BACK");
+        addDestionGoBackButton.getStyleClass().add("goback");
         AnchorPane.setLeftAnchor(addDestionGoBackButton, 20.0);
         AnchorPane.setBottomAnchor(addDestionGoBackButton, 20.0);
         //addDestinationMenuButton and position
         Button addDestinationMenuButton = new Button("ENTER");
-        AnchorPane.setLeftAnchor(addDestinationMenuButton, 100.0);
+        addDestinationMenuButton.getStyleClass().add("enter");
+        AnchorPane.setLeftAnchor(addDestinationMenuButton, 140.0);
         AnchorPane.setBottomAnchor(addDestinationMenuButton, 20.0);
         //addLocationLabel and position
         Label addLocationLabel = new Label("Enter the name of the location:");
         AnchorPane.setLeftAnchor(addLocationLabel, 20.0);
-        AnchorPane.setTopAnchor(addLocationLabel, 80.0);
+        AnchorPane.setTopAnchor(addLocationLabel, 100.0);
         //addLocationField and position
         TextField addLocationField = new TextField();
         AnchorPane.setLeftAnchor(addLocationField, 20.0);
-        AnchorPane.setTopAnchor(addLocationField, 100.0);
+        AnchorPane.setTopAnchor(addLocationField, 130.0);
         //addXYCoordinateLabel and position
         Label addXYCoordinateLabel = new Label("Enter the x,y coordinates (x,y) as two integer " +
                 "separated by a comma:");
         AnchorPane.setLeftAnchor(addXYCoordinateLabel, 20.0);
-        AnchorPane.setTopAnchor(addXYCoordinateLabel, 140.0);
+        AnchorPane.setTopAnchor(addXYCoordinateLabel, 170.0);
         //addXYCoordinateField and position
         TextField addXYCoordinateField = new TextField();
         AnchorPane.setLeftAnchor(addXYCoordinateField, 20.0);
-        AnchorPane.setTopAnchor(addXYCoordinateField, 160.0);
+        AnchorPane.setTopAnchor(addXYCoordinateField, 200.0);
         Label addGasLabel = new Label("Check the box if the destination has gas. Leave the box unchecked if not.");
         AnchorPane.setLeftAnchor(addGasLabel, 20.0);
-        AnchorPane.setTopAnchor(addGasLabel, 200.0);
+        AnchorPane.setTopAnchor(addGasLabel, 240.0);
         //addXYCoordinateField and position
         CheckBox addGasBox = new CheckBox();
         AnchorPane.setLeftAnchor(addGasBox, 20.0);
-        AnchorPane.setTopAnchor(addGasBox, 220.0);
+        AnchorPane.setTopAnchor(addGasBox, 270.0);
 
         /*
          * INTRODUCTION SCENE
